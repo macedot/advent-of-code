@@ -1,15 +1,4 @@
-import os
-from pathlib import Path
-
-
-def load_input(base_name: str = __file__):
-    input_path = Path(os.path.abspath(os.path.dirname(base_name)))
-    input_name = os.path.basename(base_name)
-    input_file = (input_path / input_name).with_suffix('.input')
-    with open(input_file, "r") as f:
-        res = f.readlines()
-    return res
-
+from AoC import load_input
 
 # Rock <- Paper <- Scissors
 lhs = {'A': 1, 'B': 2, 'C': 3}
@@ -29,7 +18,7 @@ res2 = {
 
 ans1 = 0
 ans2 = 0
-for line in load_input():
+for line in load_input(__file__):
     l, r = line.rstrip().split()
     #l, r = lhs[l], rhs[r]
     #ans1 += r + (r - l + 1) % 3 * 3
