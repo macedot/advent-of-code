@@ -1,10 +1,8 @@
-from AoC import load_input
+from AoC import load_input, chunk
 
-box = dict()
-
-
-def move(qt: int, src: int, dst: int):
-    print(qt, src, dst)
+BOX_SIZE = 10
+box1 = [list() for _ in range(BOX_SIZE)]
+box2 = [list() for _ in range(BOX_SIZE)]
 
 
 def load(line: str):
@@ -13,26 +11,50 @@ def load(line: str):
         x = x.strip()
         if x == "":
             continue
-        idx = i+1
-        if idx not in box:
-            box[idx] = list()
-        box[idx].append(x)
+        box1[i].insert(0, x[1])
+        box2[i].insert(0, x[1])
 
 
-def chunk(string: str, length: int = 4):
-    return [string[0+i:length+i] for i in range(0, len(string), length)]
+def move1(qt, src, dst):
+    for _ in range(int(qt)):
+        box1[dst].append(box1[src].pop())
+
+
+def move2(qt, src, dst):
+    box2[dst] += box2[src][-qt:]
+    del box2[src][-qt:]
+
+
+def print_box(box):
+    for lst in box:
+        print(lst)
+    print()
+
+
+def print_box_top(task, box):
+    print(task, ",", end='', sep='')
+    for lst in box:
+        print(lst[-1] if len(lst) > 0 else '', end='')
+    print()
 
 
 for orig_line in load_input(__file__):
+    orig_line = orig_line.rstrip()
     line = [s for s in orig_line.rstrip().split(' ') if s]
     if len(line) == 0:
         continue
     if line[0] == "1":
+        box1 = box1[:len(line)]
+        box2 = box2[:len(line)]
         continue
     if line[0] == "move":
-        move(line[1], line[3], line[5])
+        move1(int(line[1]), int(line[3]) - 1, int(line[5]) - 1)
+        move2(int(line[1]), int(line[3]) - 1, int(line[5]) - 1)
     else:
         load(orig_line)
 
+# print_box(box1)
+# print_box(box2)
 
-print(1, [box[k][-1] for k in sorted(box.keys())])
+print_box_top(1, box1)
+print_box_top(2, box2)

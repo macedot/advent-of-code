@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from string import ascii_lowercase, ascii_uppercase
+
 
 def load_input(base_name: str = __file__):
     input_path = Path(os.path.abspath(os.path.dirname(base_name)))
@@ -9,3 +9,7 @@ def load_input(base_name: str = __file__):
     with open(input_file, "r") as f:
         res = f.readlines()
     return res
+
+
+def chunk(string: str, length: int = 4):
+    return [string[0+i:length+i] for i in range(0, len(string), length)]
