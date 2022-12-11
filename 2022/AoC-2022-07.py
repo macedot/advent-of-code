@@ -1,5 +1,4 @@
 from AoC import load_input
-from pathlib import Path
 
 current_dir = []
 sizes = dict()
