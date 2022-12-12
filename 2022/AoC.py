@@ -13,3 +13,8 @@ def load_input(base_name: str = __file__):
 
 def chunk(string: str, length: int = 4):
     return [string[0+i:length+i] for i in range(0, len(string), length)]
+
+
+def divide_chunks(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
