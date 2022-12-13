@@ -13,12 +13,11 @@ def compare(L, R):
         return 0
     L = L if type(L) is list else [L]
     R = R if type(R) is list else [R]
-    sL = len(L)
-    sR = len(R)
     for l, r in zip(L, R):
         res = compare(l, r)
         if res:
             return res
+    sL, sR = len(L), len(R)
     if sL < sR:
         return -1
     if sL > sR:
@@ -28,8 +27,8 @@ def compare(L, R):
 
 c = 0
 idx = 0
-ans1 = []
 comp = [0, 0]
+ans1 = []
 full = []
 for line in load_input():
     line = line.strip()
@@ -53,8 +52,8 @@ END = [[6]]
 full.append(BEGIN)
 full.append(END)
 full.sort(key=cmp_key)
-res = []
+ans2 = []
 for i, f in enumerate(full):
     if f == BEGIN or f == END:
-        res.append(i+1)
-print("ans2", prod(res), res)
+        ans2.append(i+1)
+print("ans2", prod(ans2), ans2)
