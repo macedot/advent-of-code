@@ -1,5 +1,5 @@
 from AoC import load_input
-from time import time
+from math import prod
 
 
 class Monkey:
@@ -75,21 +75,16 @@ def proc_rounds(rounds: int, worried: bool):
             continue
         load_monkey(line)
 
+    # https://github.com/jonathanpaulson/AdventOfCode/blob/master/2022/11.py
     div = set()
     for m in monkeys:
         if m.test > 0:
             div.add(m.test)
+    lcm = prod(div)
 
-    # https://github.com/jonathanpaulson/AdventOfCode/blob/master/2022/11.py
-    lcm = 1
-    for x in div:
-        lcm = (lcm * x)
-
-    start = time()
     for _ in range(rounds):
         for idx in range(len(monkeys)):
             proc_monkey(idx, worried)
-    print(time() - start)
 
     sorted_monkeys = sorted(monkeys, reverse=True)
     # for monkey in sorted_monkeys:
