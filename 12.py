@@ -1,8 +1,8 @@
-from AoC import load_input
+#!/usr/sbin/python
 from collections import deque
 
 heightmap = []
-for line in load_input(__file__):
+for line in open(0).readlines():
     line = line.strip()
     heightmap.append([x for x in line])
 

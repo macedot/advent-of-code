@@ -1,4 +1,8 @@
-from AoC import load_input, chunk
+#!/usr/sbin/python
+
+def chunk(string: str, length: int = 4):
+    return [string[0 + i: length + i] for i in range(0, len(string), length)]
+
 
 BOX_SIZE = 10
 box1 = [list() for _ in range(BOX_SIZE)]
@@ -38,7 +42,7 @@ def print_box_top(task, box):
     print()
 
 
-for orig_line in load_input(__file__):
+for orig_line in open(0).readlines():
     orig_line = orig_line.rstrip()
     line = [s for s in orig_line.rstrip().split(' ') if s]
     if len(line) == 0:
@@ -52,9 +56,6 @@ for orig_line in load_input(__file__):
         move2(int(line[1]), int(line[3]) - 1, int(line[5]) - 1)
     else:
         load(orig_line)
-
-# print_box(box1)
-# print_box(box2)
 
 print_box_top(1, box1)
 print_box_top(2, box2)

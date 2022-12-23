@@ -1,6 +1,5 @@
 #!/usr/sbin/python
 from functools import cmp_to_key
-from AoC import load_input
 from math import prod
 
 
@@ -30,7 +29,7 @@ idx = 0
 comp = [0, 0]
 ans1 = []
 full = []
-for line in load_input():
+for line in open(0).readlines():
     line = line.strip()
     if len(line) == 0:
         continue

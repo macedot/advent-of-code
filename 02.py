@@ -1,4 +1,4 @@
-from AoC import load_input
+#!/usr/sbin/python
 
 # Rock <- Paper <- Scissors
 lhs = {'A': 1, 'B': 2, 'C': 3}
@@ -18,12 +18,9 @@ res2 = {
 
 ans1 = 0
 ans2 = 0
-for line in load_input(__file__):
+for line in open(0).readlines():
     l, r = line.rstrip().split()
-    #l, r = lhs[l], rhs[r]
-    #ans1 += r + (r - l + 1) % 3 * 3
     ans1 += res1[l][r]
-    #ans2 += (r - 1) * 3 + (l + r) % 3 + 1
     ans2 += res2[l][r]
 print(f'{ans1=}')
 print(f'{ans2=}')

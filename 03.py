@@ -1,4 +1,4 @@
-from AoC import load_input
+#!/usr/sbin/python
 from string import ascii_lowercase, ascii_uppercase
 
 letters = ascii_lowercase + ascii_uppercase
@@ -9,7 +9,7 @@ ans1 = 0
 ans2 = 0
 idx = 0
 group = []
-for line in load_input(__file__):
+for line in open(0).readlines():
     line = line.rstrip()
     mid = int(len(line) / 2)
     l, r = line[:mid], line[mid:]

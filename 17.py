@@ -1,8 +1,7 @@
 #!/usr/sbin/python
 # https://github.com/juanplopes/advent-of-code-2022/blob/main/day17.py
-from AoC import load_input
 
-J = load_input(__file__)[0]
+J = open(0).readlines()[0]
 P = (((0, 0), (1, 0), (2, 0), (3, 0)),
      ((0, 1), (1, 0), (1, 1), (1, 2), (2, 1)),
      ((0, 0), (1, 0), (2, 0), (2, 1), (2, 2)),

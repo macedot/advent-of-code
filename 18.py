@@ -1,9 +1,9 @@
 #!/usr/sbin/python
 from collections import deque
-from AoC import load_input
+
 # https://github.com/juanplopes/advent-of-code-2022/blob/main/day18.py
 cubes = set(tuple(map(int, line.strip().split(",")))
-            for line in load_input(__file__))
+            for line in open(0).readlines())
 mins, maxs = [min(x)-1 for x in zip(*cubes)], [max(x)+1 for x in zip(*cubes)]
 
 # ans1 = 0

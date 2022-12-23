@@ -1,4 +1,4 @@
-from AoC import load_input
+#!/usr/sbin/python
 from math import prod
 
 
@@ -53,7 +53,6 @@ def load_monkey(line):
         monkeys[last_id].items = [int(i.strip()) for i in param.split(",")]
     elif "Operation" in op:
         operation = [i.strip() for i in param.split("=")]
-        #assert (operation[0] == "new")
         monkeys[last_id].operation = operation[1].strip()
     elif "Test" in op:
         monkeys[last_id].test = int(param.split()[2])
@@ -63,13 +62,13 @@ def load_monkey(line):
         monkeys[last_id].test_false = int(param.split()[3])
 
 
-def proc_rounds(rounds: int, worried: bool):
+def proc_rounds(data: list, rounds: int, worried: bool):
     global last_id, monkeys, div, lcm
 
     last_id = 0
     monkeys = [Monkey(id) for id in range(10)]
 
-    for line in load_input(__file__):
+    for line in data:
         line = line.strip().split(":")
         if len(line) < 2:
             continue
@@ -87,12 +86,10 @@ def proc_rounds(rounds: int, worried: bool):
             proc_monkey(idx, worried)
 
     sorted_monkeys = sorted(monkeys, reverse=True)
-    # for monkey in sorted_monkeys:
-    #     print(monkey)
-
     ans = (sorted_monkeys[0].inspect * sorted_monkeys[1].inspect)
     print(f"{ans=}")
 
 
-proc_rounds(20, True)
-proc_rounds(10000, False)
+data = open(0).readlines()
+proc_rounds(data, 20, True)
+proc_rounds(data, 10000, False)

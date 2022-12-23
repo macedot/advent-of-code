@@ -1,4 +1,4 @@
-from AoC import load_input
+#!/usr/sbin/python
 
 current_dir = []
 sizes = dict()
@@ -27,7 +27,7 @@ def add_size(size: int):
         tmp_dir.pop()
 
 
-for line in load_input(__file__):
+for line in open(0).readlines():
     line = line.rstrip().split()
     if line[0] == "$":
         if line[1] == "cd":

@@ -1,6 +1,4 @@
 #!/usr/sbin/python
-from AoC import load_input
-
 
 class Point:
     x: int
@@ -22,7 +20,7 @@ EXTRA_X = 200
 base_x = 300
 
 lst = []
-for line in load_input(__file__):
+for line in open(0).readlines():
     line = line.strip()
     pts = []
     for pair in line.split("->"):

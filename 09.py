@@ -1,5 +1,4 @@
-from AoC import load_input
-
+#!/usr/sbin/python
 
 class Knot:
     x: int = 0
@@ -63,7 +62,7 @@ rope10 = Rope(10)
 DX = {'L': -1, 'R': 1, 'U': 0, 'D': 0}
 DY = {'L': 0, 'R': 0, 'U': -1, 'D': 1}
 
-for line in load_input(__file__):
+for line in open(0).readlines():
     d, v = line.rstrip().split()
     rope2.move(DX[d], DY[d], int(v))
     rope10.move(DX[d], DY[d], int(v))

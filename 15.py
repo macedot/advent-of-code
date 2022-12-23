@@ -1,5 +1,4 @@
 #!/usr/sbin/python
-from AoC import load_input
 from re import compile
 from multiprocessing.dummy import Pool as ThreadPool
 from itertools import cycle
@@ -8,7 +7,7 @@ from itertools import cycle
 def load_data():
     G = dict()
     pattern = compile(r"-?\d+")
-    for line in load_input(__file__):
+    for line in open(0).readlines():
         sx, sy, bx, by = map(int, pattern.findall(line))
         d = abs(sx - bx) + abs(sy - by)
         G[(sx, sy, bx, by)] = d

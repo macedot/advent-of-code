@@ -1,7 +1,7 @@
-from AoC import load_input
+#!/usr/sbin/python
 
 grid = []
-for line in load_input(__file__):
+for line in open(0).readlines():
     line = list(line.rstrip())
     grid.append(line)
 
@@ -28,15 +28,13 @@ def scenic_score(ix, jx):
     score = 1
     s = 0
     for i in range(ix-1, -1, -1):
-        #print("L", f"{jx=},{i=}", grid[jx][i], )
         s += 1
         if grid[jx][i] >= X:
             break
     score *= s
-    
+
     s = 0
     for i in range(ix+1, SIZE_W):
-        #print("R", f"{jx=},{i=}", grid[jx][i])
         s += 1
         if grid[jx][i] >= X:
             break
@@ -44,7 +42,6 @@ def scenic_score(ix, jx):
 
     s = 0
     for j in range(jx-1, -1, -1):
-        #print("T", f"{j=},{ix=}", grid[j][ix])
         s += 1
         if grid[j][ix] >= X:
             break
@@ -52,7 +49,6 @@ def scenic_score(ix, jx):
 
     s = 0
     for j in range(jx+1, SIZE_H):
-        #print("B", f"{j=},{ix=}", grid[j][ix])
         s += 1
         if grid[j][ix] >= X:
             break

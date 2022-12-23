@@ -1,5 +1,4 @@
 #!/usr/sbin/python
-from AoC import load_input
 from re import compile
 import functools
 
@@ -7,7 +6,7 @@ import functools
 pattern = compile(
     r"^Valve ([A-Z][A-Z]) has flow rate=(\d+); .+ valve.? (.+)$")
 lines = [pattern.findall(line)[0]
-         for line in load_input(__file__)]
+         for line in open(0).readlines()]
 
 F = dict()
 G = dict()
@@ -51,9 +50,9 @@ print("ans1 =", maxflow("AA", 30))
 #         newbudget = budget - T[v][u] - 1
 #         if I[u] & state or newbudget <= 0: continue
 #         visit(u, newbudget, state | I[u], flow + newbudget * F[u], answer)
-#     return answer    
+#     return answer
 # total1 = max(visit('AA', 30, 0, 0, {}).values())
 # visited2 = visit('AA', 26, 0, 0, {})
-# total2 = max(v1+v2 for k1, v1 in visited2.items() 
+# total2 = max(v1+v2 for k1, v1 in visited2.items()
 #                    for k2, v2 in visited2.items() if not k1 & k2)
 # print(total1, total2)

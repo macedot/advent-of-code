@@ -1,6 +1,6 @@
 #!/usr/sbin/python
 import re
-M, K = [line.rstrip() for line in open("22.in").read().split("\n\n")]
+M, K = [line.rstrip() for line in open(0).read().split("\n\n")]
 M = [l.rstrip() for l in M.split("\n")]
 SIZE_H = len(M)
 SIZE_W = max(map(len, M))

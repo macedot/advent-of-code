@@ -1,4 +1,9 @@
-from AoC import load_input, divide_chunks
+#!/usr/sbin/python
+
+def divide_chunks(l, n):
+    for i in range(0, len(l), n):
+        yield l[i: i + n]
+
 
 reg_X = 1
 cycle = 1
@@ -49,7 +54,7 @@ def proc_addx(arg: int):
     cycle += 1
 
 
-for line in load_input(__file__):
+for line in open(0).readlines():
     line = line.rstrip().split()
     if line[0] == "noop":
         proc_noop()

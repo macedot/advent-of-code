@@ -1,8 +1,7 @@
-from AoC import load_input
-
+#!/usr/sbin/python
 ans1 = 0
 ans2 = 0
-for line in load_input(__file__):
+for line in open(0).readlines():
     A, B = line.rstrip().split(",")
     Al, Ar = [int(x) for x in A.split("-")]
     Bl, Br = [int(x) for x in B.split("-")]
