@@ -1,5 +1,5 @@
-#CXXFLAGS += -std=c++20 -lfmt -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference
-CXXFLAGS += -std=c++20 -Ofast
+CXXFLAGS += -std=c++20 -Og -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference
+#CXXFLAGS += -std=c++20 -Ofast
 
 MKDIR_P = mkdir -p
 OUT_DIR = ./build
