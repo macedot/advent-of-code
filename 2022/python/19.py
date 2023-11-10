@@ -46,7 +46,7 @@ def T(blueprint, mins):
 lines = [tuple(map(int, re.findall('\\d+', x)))
          for x in sys.stdin.read().splitlines()]
 
-total1 = sum(x[0] * T(x, 24) for x in lines[1:2])
+total1 = sum(x[0] * T(x, 24) for x in lines)
 print(total1)
 
 total2 = functools.reduce(lambda a, b: a*b, (T(x, 32) for x in lines[:3]), 1)
