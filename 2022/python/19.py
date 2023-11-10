@@ -1,35 +1,53 @@
 #!/usr/sbin/python
-#https://github.com/juanplopes/advent-of-code-2022/blob/main/day19.py
+# https://github.com/juanplopes/advent-of-code-2022/blob/main/day19.py
+import sys
 import re
+import functools
+
+
+def timeto(req, cur, prod):
+    return max(((req - cur + prod - 1) // prod), 0) + 1
+
+
 def T(blueprint, mins):
     _, co, cc, cb1, cb2, cg1, cg2 = blueprint
-    mo = max(co, cc, cb1, cg1)
-    T = {(0, 0, 0, 1, 0, 0): 0}
-    for minute in range(mins, 1, -1):
-        maxg = max(T.values())
-        Q = {}
-        def p(v, *k): Q[k] = max(Q.get(k, 0), v)
-        for (o, c, b, ro, rc, rb), g in T.items():
-            if g+minute*minute-minute < maxg:
-                continue
-            bo = o >= co and ro < mo and o+(ro*minute) < mo*minute
-            bc = o >= cc and rc < cb2 and c+(rc*minute) < cb2*minute
-            bb = o >= cb1 and c >= cb2 and rb < cg2
-            bg = o >= cg1 and b >= cg2
-            if minute >= 2:
-                if bo:
-                    p(g, o+ro-co, c+rc, b+rb, ro+1, rc, rb)
-                if bc:
-                    p(g, o+ro-cc, c+rc, b+rb, ro, rc+1, rb)
-                if bb:
-                    p(g, o+ro-cb1, c+rc-cb2, b+rb, ro, rc, rb+1)
-                if not all((bo, bc, bb, bg)):
-                    p(g, o+ro, c+rc, b+rb, ro, rc, rb)
-            if bg:
-                p(g + (minute-1), o+ro-cg1, c+rc, b+rb-cg2, ro, rc, rb)
-        T = Q
-    return max(T.values())
-lines = [tuple(map(int, re.findall('\\d+', x))) for x in open(0).readlines()]
-print(sum(x[0] * T(x, 24) for x in lines))
-a, b, c = (T(x, 32) for x in lines[:3])
-print(a * b * c)
+    mo, maxx = max(cc, cb1, cg1), 0
+
+    def dfs(g, t, o, c, b, ro, rc, rb):
+        nonlocal maxx
+        maxg = g+t*t-t
+        if t <= 0 or maxg <= maxx:
+            return
+        maxx = max(maxx, g)
+        if rb:  # create geode robot?
+            dt = max(timeto(cg1, o, ro), timeto(cg2, b, rb))
+            dfs(g + max(t-dt, 0), t-dt, o+dt*ro-cg1,
+                c+dt*rc, b+dt*rb-cg2, ro, rc, rb)
+        if maxg <= maxx:
+            return
+        if rc and b+(rb*t) < cg2*t:  # create obsidian robot?
+            dt = max(timeto(cb1, o, ro), timeto(cb2, c, rc))
+            dfs(g, t-dt, o+dt*ro-cb1, c+dt*rc-cb2, b+dt*rb, ro, rc, rb+1)
+        if maxg <= maxx:
+            return
+        if c+(rc*t) < cb2*t:  # create clay robot?
+            dt = timeto(cc, o, ro)
+            dfs(g, t-dt, o+dt*ro-cc, c+dt*rc, b+dt*rb, ro, rc+1, rb)
+        if maxg <= maxx:
+            return
+        if o+(ro*t) < mo*t:  # create ore robot?
+            dt = timeto(co, o, ro)
+            dfs(g, t-dt, o+dt*ro-co, c+dt*rc, b+dt*rb, ro+1, rc, rb)
+
+    dfs(0, mins, 0, 0, 0, 1, 0, 0)
+    return maxx
+
+
+lines = [tuple(map(int, re.findall('\\d+', x)))
+         for x in sys.stdin.read().splitlines()]
+
+total1 = sum(x[0] * T(x, 24) for x in lines[1:2])
+print(total1)
+
+total2 = functools.reduce(lambda a, b: a*b, (T(x, 32) for x in lines[:3]), 1)
+print(total2)
