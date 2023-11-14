@@ -18,9 +18,7 @@ def solve1(y_target):
     global G
     known = set()
     intervals = []
-    for p in G:
-        sx, sy, bx, by = p
-        d = G[p]
+    for (sx, sy, bx, by), d in G.items():
         o = d - abs(sy - y_target)
         if o < 0:
             continue
@@ -31,20 +29,26 @@ def solve1(y_target):
             known.add(bx)
 
     # merge intervals - https://raw.githubusercontent.com/hyper-neutrino/advent-of-code/main/2022/day15p1.py
-    intervals.sort()
-    q = [intervals[0]]
-    for lo, hi in intervals[1:]:
-        _, qhi = q[-1]
-        if lo > qhi + 1:
-            q.append([lo, hi])
-        else:
-            q[-1][1] = max(qhi, hi)
+    # intervals.sort()
+    # q = [intervals[0]]
+    # for lo, hi in intervals[1:]:
+    #     _, qhi = q[-1]
+    #     if lo > qhi + 1:
+    #         q.append([lo, hi])
+    #     else:
+    #         q[-1][1] = max(qhi, hi)
+    # cannot = set()
+    # for lo, hi in q:
+    #     for x in range(lo, hi + 1):
+    #         cannot.add(x)
+    # print(len(cannot - known))
 
     candidate = set()
     for lo, hi in intervals:
         for x in range(lo, hi + 1):
             if x not in known:
                 candidate.add(x)
+
     return len(candidate)
 
 
