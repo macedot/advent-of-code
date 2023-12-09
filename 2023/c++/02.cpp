@@ -18,7 +18,7 @@ auto get_cube(std::string const& src)
     return std::make_pair(color, qt);
 };
 
-uint32_t funcParse1(std::string const& game)
+uint32_t funcParse1(uint32_t lhs, std::string const& game)
 {
     static const std::unordered_map<std::string, uint32_t> cubeMax{
         { "red", 12 },
@@ -33,14 +33,14 @@ uint32_t funcParse1(std::string const& game)
         for (const auto& cube : split(game_param, ',')) {
             const auto c = get_cube(cube);
             if (cubeMax.at(c.first) < c.second) {
-                return 0;
+                return lhs;
             }
         }
     }
-    return id;
+    return lhs + id;
 }
 
-uint32_t funcParse2(std::string const& game)
+uint32_t funcParse2(uint32_t lhs, std::string const& game)
 {
     std::unordered_map<std::string, uint32_t> cubeMax{
         { "red", 1 },
@@ -61,16 +61,7 @@ uint32_t funcParse2(std::string const& game)
         power *= v;
     }
 
-    return power;
-}
-
-uint32_t parseGames(std::vector<std::string> const& games, auto funcParse)
-{
-    uint32_t sum = 0;
-    for (const auto& game : games) {
-        sum += funcParse(game);
-    }
-    return sum;
+    return lhs + power;
 }
 
 int main(int argc, char* argv[])
@@ -81,10 +72,10 @@ int main(int argc, char* argv[])
 
     const auto games = readFile(argv[1]);
 
-    const auto ans1 = parseGames(games, funcParse1);
+    const auto ans1 = std::accumulate(games.begin(), games.end(), 0UL, funcParse1);
     fmt::print("{}\n", ans1);
 
-    const auto ans2 = parseGames(games, funcParse2);
+    const auto ans2 = std::accumulate(games.begin(), games.end(), 0UL, funcParse2);
     fmt::print("{}\n", ans2);
 
     return 0;
