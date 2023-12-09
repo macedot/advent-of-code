@@ -78,9 +78,6 @@ VVALUE findRatios(std::string const& L, VALUE lineSize, SVALUE const& G)
 {
     VVALUE ratios;
     for (const auto& g : G) {
-        fmt::print("==================================\n");
-        DUMP(g);
-
         VVALUE gears;
 
         // has something at its left
@@ -93,9 +90,7 @@ VVALUE findRatios(std::string const& L, VALUE lineSize, SVALUE const& G)
                 }
             }
             if (k < g) {
-                const auto s = L.substr(k, g - k);
-                fmt::print("LEFT [{}]\n", s);
-                gears.push_back(std::stoll(s));
+                gears.push_back(std::stoll(L.substr(k, g - k)));
             }
         }
 
@@ -109,13 +104,11 @@ VVALUE findRatios(std::string const& L, VALUE lineSize, SVALUE const& G)
                 }
             }
             if (g < k) {
-                const auto s = L.substr(g + 1, k - g);
-                fmt::print("RIGHT [{}]\n", s);
-                gears.push_back(std::stoll(s));
+                gears.push_back(std::stoll(L.substr(g + 1, k - g)));
             }
         }
 
-        auto get_number_at_position = [&L, lineSize](VALUE p) {
+        auto add_number_from_pos = [&gears, &L, lineSize](VALUE p) {
             VALUE start = p;
             VALUE end   = p;
             while (std::isdigit(L[start - 1])) {
@@ -130,52 +123,34 @@ VVALUE findRatios(std::string const& L, VALUE lineSize, SVALUE const& G)
                     break;
                 }
             }
-            return std::stoll(L.substr(start, end - start + 1));
+            gears.push_back(std::stoll(L.substr(start, end - start + 1)));
         };
 
         // north
-        {
-            const auto north = g - lineSize;
-            if (north >= 0) {
-                if (std::isdigit(L[north])) {
-                    const auto v = get_number_at_position(north);
-                    fmt::print("NORTH [{}]\n", v);
-                    gears.push_back(v);
+        if (const auto north = g - lineSize; north >= 0) {
+            if (std::isdigit(L[north])) {
+                add_number_from_pos(north);
+            }
+            else {
+                if (north - 1 >= 0 && std::isdigit(L[north - 1])) {
+                    add_number_from_pos(north - 1);
                 }
-                else {
-                    if (north - 1 >= 0 && std::isdigit(L[north - 1])) {
-                        const auto v = get_number_at_position(north - 1);
-                        fmt::print("NORTH-WEST [{}]\n", v);
-                        gears.push_back(v);
-                    }
-                    if (north + 1 % lineSize != 0 && std::isdigit(L[north + 1])) {
-                        const auto v = get_number_at_position(north + 1);
-                        fmt::print("NORTH-EAST [{}]\n", v);
-                        gears.push_back(v);
-                    }
+                if (north + 1 % lineSize != 0 && std::isdigit(L[north + 1])) {
+                    add_number_from_pos(north + 1);
                 }
             }
         }
 
-        {
-            const auto south = g + lineSize;
-            if (south < L.size()) {
-                if (std::isdigit(L[south])) {
-                    const auto v = get_number_at_position(south);
-                    fmt::print("SOUTH [{}]\n", v);
-                    gears.push_back(v);
+        if (const auto south = g + lineSize; south < L.size()) {
+            if (std::isdigit(L[south])) {
+                add_number_from_pos(south);
+            }
+            else {
+                if (south - 1 % lineSize != 0 && std::isdigit(L[south - 1])) {
+                    add_number_from_pos(south - 1);
                 }
-                else {
-                    if (south - 1 % lineSize != 0 && std::isdigit(L[south - 1])) {
-                        const auto v = get_number_at_position(south - 1);
-                        fmt::print("SOUTH-WEST [{}]\n", v);
-                        gears.push_back(v);
-                    }
-                    if (south + 1 < L.size() && std::isdigit(L[south + 1])) {
-                        const auto v = get_number_at_position(south + 1);
-                        fmt::print("SOUTH-EAST [{}]\n", v);
-                        gears.push_back(v);
-                    }
+                if (south + 1 < L.size() && std::isdigit(L[south + 1])) {
+                    add_number_from_pos(south + 1);
                 }
             }
         }

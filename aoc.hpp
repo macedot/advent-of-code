@@ -110,3 +110,9 @@ void trim(std::string& s)
     }
     return dst;
 }
+
+template<typename Range>
+[[nodiscard]] std::string join(Range&& src, std::string_view sep = ",")
+{
+    return fmt::format("[{}]", fmt::join(src, sep));
+}
