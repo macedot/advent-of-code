@@ -35,7 +35,7 @@ struct hashIPAIR {
 using SPAIR  = std::unordered_set<IPAIR, hashIPAIR>;
 using MSPAIR = std::unordered_map<IPAIR, SPAIR, hashIPAIR>;
 
-IPAIR P(auto i, auto j)
+[[nodiscard]] IPAIR P(auto i, auto j)
 {
     return std::make_pair(static_cast<VALUE>(i), static_cast<VALUE>(j));
 }
@@ -115,4 +115,22 @@ template<typename Range>
 [[nodiscard]] std::string join(Range&& src, std::string_view sep = ",")
 {
     return fmt::format("[{}]", fmt::join(src, sep));
+}
+
+[[nodiscard]] VVALUE parseNumbers(std::string const& src)
+{
+    std::stringstream ss(src);
+    VVALUE            values;
+    VALUE             value;
+    while (ss >> value) {
+        values.push_back(value);
+    }
+    return values;
+}
+
+template <typename Range>
+[[nodiscard]] SVALUE toSet(Range&& src)
+{
+    SVALUE res(src.begin(), src.end());
+    return res;
 }

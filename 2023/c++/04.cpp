@@ -1,24 +1,18 @@
 #include "aoc.hpp"
 
-SVALUE parseNumbers(std::string const& src)
+void parseValues(std::string const& line, SVALUE& lhs, SVALUE& rhs)
 {
-    std::stringstream ss(src);
-    SVALUE            values;
-    VALUE             value;
-    while (ss >> value) {
-        values.insert(value);
-    }
-    return values;
+    const auto& values = line.substr(line.find_first_of(':') + 1);
+    const auto  parts  = split(values, '|');
+    lhs                = toSet(parseNumbers(parts[0]));
+    rhs                = toSet(parseNumbers(parts[1]));
 }
 
 VALUE getPoints1(VALUE lhs, std::string const& line)
 {
-    const auto& values  = line.substr(line.find_first_of(':') + 1);
-    const auto  parts   = split(values, '|');
-    const auto  winning = parseNumbers(parts[0]);
-    const auto  numbers = parseNumbers(parts[1]);
-
-    VALUE total = 0;
+    VALUE  total = 0;
+    SVALUE winning, numbers;
+    parseValues(line, winning, numbers);
     for (const auto n : numbers) {
         if (winning.find(n) != winning.end()) {
             total += (total == 0) ? 1 : total;
@@ -41,12 +35,10 @@ VALUE processPart2(VSTRING const& cards)
     VVALUE matches(cards.size(), 0);
     VVALUE copies(cards.size(), 1);
     for (size_t idx = 0; idx < cards.size(); ++idx) {
-        const auto& card    = cards[idx];
-        const auto& values  = card.substr(card.find_first_of(':') + 1);
-        const auto  parts   = split(values, '|');
-        const auto  winning = parseNumbers(parts[0]);
-        const auto  numbers = parseNumbers(parts[1]);
-        matches[idx]        = count_intersection(winning, numbers);
+        const auto& card = cards[idx];
+        SVALUE      winning, numbers;
+        parseValues(card, winning, numbers);
+        matches[idx] = count_intersection(winning, numbers);
         for (size_t c = 0; c < matches[idx]; ++c) {
             copies[idx + c + 1] += copies[idx];
         }
