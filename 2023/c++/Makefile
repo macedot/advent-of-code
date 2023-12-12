@@ -1,6 +1,5 @@
-CXXFLAGS += -std=c++20 -Ofast -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference
-#CXXFLAGS += -std=c++20 -Ofast -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference
-#CXXFLAGS += -std=c++20 -Ofast
+#CXXFLAGS += -std=c++23 -Ofast -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference
+CXXFLAGS += -std=c++23 -Ofast
 
 CXXFLAGS += -I../../
 MKDIR_P = mkdir -p
