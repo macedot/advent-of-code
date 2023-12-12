@@ -21,21 +21,21 @@
 using VSTRING = std::vector<std::string>;
 
 using VALUE  = int64_t;
-using IPAIR  = std::pair<VALUE, VALUE>;
+using PVALUE = std::pair<VALUE, VALUE>;
 using VVALUE = std::vector<VALUE>;
 using SVALUE = std::unordered_set<VALUE>;
 
 struct hashIPAIR {
-    size_t operator()(const IPAIR& x) const
+    size_t operator()(const PVALUE& x) const
     {
         return static_cast<size_t>(x.first) ^ static_cast<size_t>(x.second);
     }
 };
 
-using SPAIR  = std::unordered_set<IPAIR, hashIPAIR>;
-using MSPAIR = std::unordered_map<IPAIR, SPAIR, hashIPAIR>;
+using SPAIR  = std::unordered_set<PVALUE, hashIPAIR>;
+using MSPAIR = std::unordered_map<PVALUE, SPAIR, hashIPAIR>;
 
-[[nodiscard]] IPAIR P(auto i, auto j)
+[[nodiscard]] PVALUE P(auto i, auto j)
 {
     return std::make_pair(static_cast<VALUE>(i), static_cast<VALUE>(j));
 }
@@ -128,7 +128,7 @@ template<typename Range>
     return values;
 }
 
-template <typename Range>
+template<typename Range>
 [[nodiscard]] SVALUE toSet(Range&& src)
 {
     SVALUE res(src.begin(), src.end());

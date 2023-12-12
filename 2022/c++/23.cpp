@@ -16,19 +16,22 @@
 #include <fmt/format.h>
 
 using VALUE   = int32_t;
-using IPAIR   = std::pair<VALUE, VALUE>;
+using PVALUE  = std::pair<VALUE, VALUE>;
 using VSTRING = std::vector<std::string>;
 
 struct hashFunction {
-    size_t operator()(const IPAIR& x) const { return static_cast<size_t>(x.first) ^ static_cast<size_t>(x.second); }
+    size_t operator()(const PVALUE& x) const
+    {
+        return static_cast<size_t>(x.first) ^ static_cast<size_t>(x.second);
+    }
 };
 
-using SPAIR = std::unordered_set<IPAIR, hashFunction>;
-using MPAIR = std::unordered_map<IPAIR, SPAIR, hashFunction>;
+using SPAIR = std::unordered_set<PVALUE, hashFunction>;
+using MPAIR = std::unordered_map<PVALUE, SPAIR, hashFunction>;
 
 #define DUMP(var) fmt::print("{} ({}) : {} = {}\n", __func__, __LINE__, #var, var)
 
-IPAIR P(auto i, auto j)
+PVALUE P(auto i, auto j)
 {
     return std::make_pair(static_cast<VALUE>(i), static_cast<VALUE>(j));
 }
@@ -63,7 +66,7 @@ SPAIR parseData(const VSTRING& lines)
     return set;
 }
 
-bool can_go(const SPAIR& T, const IPAIR& p)
+bool can_go(const SPAIR& T, const PVALUE& p)
 {
     for (int k1 = -1; k1 <= 1; ++k1) {
         for (int k2 = -1; k2 <= 1; ++k2) {
@@ -79,12 +82,12 @@ bool can_go(const SPAIR& T, const IPAIR& p)
 }
 
 struct OPTS {
-    bool  valid;
-    IPAIR pair;
+    bool   valid;
+    PVALUE pair;
 };
 using VOPTS = std::vector<OPTS>;
 
-IPAIR decide(const SPAIR& T, size_t round, const IPAIR& p)
+PVALUE decide(const SPAIR& T, size_t round, const PVALUE& p)
 {
     if (can_go(T, p)) {
         return p;
@@ -127,15 +130,15 @@ IPAIR decide(const SPAIR& T, size_t round, const IPAIR& p)
 template<size_t IDX>
 auto get_max(const SPAIR& N) -> VALUE
 {
-    return std::get<IDX>(
-      *std::max_element(N.begin(), N.end(), [](auto& l, auto& r) { return std::get<IDX>(l) < std::get<IDX>(r); }));
+    return std::get<IDX>(*std::max_element(
+      N.begin(), N.end(), [](auto& l, auto& r) { return std::get<IDX>(l) < std::get<IDX>(r); }));
 };
 
 template<size_t IDX>
 auto get_min(const SPAIR& N) -> VALUE
 {
-    return std::get<IDX>(
-      *std::min_element(N.begin(), N.end(), [](auto& l, auto& r) { return std::get<IDX>(l) < std::get<IDX>(r); }));
+    return std::get<IDX>(*std::min_element(
+      N.begin(), N.end(), [](auto& l, auto& r) { return std::get<IDX>(l) < std::get<IDX>(r); }));
 };
 
 int main(int argc, char* argv[])
