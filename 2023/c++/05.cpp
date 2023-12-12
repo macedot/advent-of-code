@@ -1,24 +1,24 @@
 #include "aoc.hpp"
 
 struct ELEM {
-    VALUE start, length;
+    VALUE src, dst, length;
 };
-using MAP = std::map<VALUE, ELEM>;
+using VELEM = std::vector<ELEM>;
 
-MAP readMap(VSTRING const& L, size_t& i)
+VELEM readMap(VSTRING const& L, size_t& i)
 {
-    MAP   M;
-    VALUE src;
-    ELEM  elem;
+    VELEM V;
     for (; i < L.size(); ++i) {
         if (L[i].empty()) {
             break;
         }
         std::stringstream ss(L[i]);
-        ss >> elem.start >> src >> elem.length;
-        M[src] = elem;
+        ELEM              elem;
+        ss >> elem.dst >> elem.src >> elem.length;
+        V.push_back(elem);
     }
-    return M;
+    std::sort(V.begin(), V.end(), [](auto& left, auto& right) { return left.src < right.src; });
+    return V;
 }
 
 std::vector<PVALUE> seedRange(VVALUE const& seeds)
@@ -50,9 +50,9 @@ std::vector<PVALUE> parseSeeds(VSTRING const& lines, bool expand_seeds)
     return expand_seeds ? seedRange(seeds) : seedValues(seeds);
 }
 
-std::vector<MAP> parseMaps(VSTRING const& lines)
+std::vector<VELEM> parseMaps(VSTRING const& lines)
 {
-    std::vector<MAP> maps;
+    std::vector<VELEM> maps;
     for (size_t i = 0; i < lines.size(); ++i) {
         const auto& line = lines[i];
         if (!line.contains("map:")) {
@@ -63,15 +63,15 @@ std::vector<MAP> parseMaps(VSTRING const& lines)
     return maps;
 }
 
-VALUE walk(VALUE val, std::vector<MAP> const& maps)
+VALUE walk(VALUE val, std::vector<VELEM> const& maps)
 {
     for (const auto& map : maps) {
-        for (const auto& [src, dst] : map) {
-            if (src > val) {
+        for (const auto& elem : map) {
+            if (elem.src > val) {
                 break;
             }
-            if (src <= val && val < src + dst.length) {
-                val += (dst.start - src);
+            if (elem.src <= val && val < elem.src + elem.length) {
+                val += (elem.dst - elem.src);
                 break;
             }
         }
@@ -79,7 +79,7 @@ VALUE walk(VALUE val, std::vector<MAP> const& maps)
     return val;
 }
 
-VALUE processPair(PVALUE pair, std::vector<MAP> const& maps)
+VALUE processPair(PVALUE pair, std::vector<VELEM> const& maps)
 {
     VALUE ans = std::numeric_limits<VALUE>::max();
     for (VALUE val = pair.first; val < pair.second; ++val) {
@@ -91,7 +91,7 @@ VALUE processPair(PVALUE pair, std::vector<MAP> const& maps)
     return ans;
 }
 
-VALUE processSeeds(std::vector<PVALUE> const& seeds, std::vector<MAP> const& maps)
+VALUE processSeeds(std::vector<PVALUE> const& seeds, std::vector<VELEM> const& maps)
 {
     std::vector<std::future<VALUE>> tasks;
     for (const auto& pair : seeds) {
