@@ -7,7 +7,7 @@ OUT_DIR = ./build
 %: %.cpp
 	@${MKDIR_P} ${OUT_DIR}
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o ./build/$@.exe
-	/usr/bin/time ./build/$@.exe ../input/$@.in
+	time ./build/$@.exe ../input/$@.in
 
 clean:
 	rm -fr ./build
