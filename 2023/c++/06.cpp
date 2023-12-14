@@ -17,8 +17,8 @@ VALUE race(VALUE time, VALUE distance)
 
 VALUE processPart1(VVALUE& time, VVALUE& distance)
 {
-    VALUE res = 1;
     FMT_ASSERT(time.size() == distance.size(), "Invalid input!");
+    VALUE res = 1;
     for (size_t i = 0; i < time.size(); ++i) {
         res *= race(time[i], distance[i]);
     }
