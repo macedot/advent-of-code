@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <deque>
 #include <filesystem>
 #include <fstream>
 #include <functional>
@@ -23,38 +24,45 @@ using STRING  = std::string;
 using VSTRING = std::vector<STRING>;
 
 using VALUE  = int64_t;
+using DVALUE = std::deque<VALUE>;
 using PVALUE = std::pair<VALUE, VALUE>;
-using VVALUE = std::vector<VALUE>;
 using SVALUE = std::unordered_set<VALUE>;
+using VVALUE = std::vector<VALUE>;
 
-struct hashIPAIR {
+struct hashPVALUE {
     size_t operator()(const PVALUE& x) const
     {
         return static_cast<size_t>(x.first) ^ static_cast<size_t>(x.second);
     }
 };
 
-using SPAIR  = std::unordered_set<PVALUE, hashIPAIR>;
-using MSPAIR = std::unordered_map<PVALUE, SPAIR, hashIPAIR>;
+using DPAIR  = std::deque<PVALUE>;
+using SPAIR  = std::unordered_set<PVALUE, hashPVALUE>;
+using MSPAIR = std::unordered_map<PVALUE, SPAIR, hashPVALUE>;
+using MVPAIR = std::unordered_map<PVALUE, VALUE, hashPVALUE>;
 
 [[nodiscard]] PVALUE P(auto i, auto j)
 {
     return std::make_pair(static_cast<VALUE>(i), static_cast<VALUE>(j));
 }
 
-#define DUMP(var) fmt::print("{} ({}) : {} = [{}]\n", __func__, __LINE__, #var, var)
+#define DUMP(var)                                                              \
+    fmt::print("{} ({}) : {} = [{}]\n", __func__, __LINE__, #var, var)
 
 void ltrim(std::string& s)
 {
-    s.erase(s.begin(),
-            std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); }));
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+                return !std::isspace(ch);
+            }));
 }
 
 void rtrim(std::string& s)
 {
-    s.erase(
-      std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(),
-      s.end());
+    s.erase(std::find_if(s.rbegin(),
+                         s.rend(),
+                         [](unsigned char ch) { return !std::isspace(ch); })
+              .base(),
+            s.end());
 }
 
 void trim(std::string& s)
@@ -67,7 +75,8 @@ void trim(std::string& s)
 {
     std::ifstream ifs(inputFile, std::ios::in | std::ios::binary);
     if (!ifs) {
-        throw std::runtime_error("Unable to open input file: " + inputFile.string());
+        throw std::runtime_error("Unable to open input file: " +
+                                 inputFile.string());
     }
 
     VSTRING     content;
@@ -78,12 +87,14 @@ void trim(std::string& s)
     return content;
 }
 
-[[nodiscard]] inline std::string readFileString(std::filesystem::path const& inputFile,
-                                                VALUE&                       lineSize)
+[[nodiscard]] inline std::string readFileString(
+  std::filesystem::path const& inputFile,
+  VALUE&                       lineSize)
 {
     std::ifstream ifs(inputFile, std::ios::in | std::ios::binary);
     if (!ifs) {
-        throw std::runtime_error("Unable to open input file: " + inputFile.string());
+        throw std::runtime_error("Unable to open input file: " +
+                                 inputFile.string());
     }
 
     std::string content;
@@ -98,7 +109,9 @@ void trim(std::string& s)
     return content;
 }
 
-[[nodiscard]] VSTRING split(std::string const& src, char delim, bool do_trim = true)
+[[nodiscard]] VSTRING split(std::string const& src,
+                            char               delim,
+                            bool               do_trim = true)
 {
     std::stringstream ss(src);
     VSTRING           dst;

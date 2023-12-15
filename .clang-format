@@ -10,7 +10,7 @@ AlwaysBreakBeforeMultilineStrings: 'true'
 AlwaysBreakTemplateDeclarations: 'Yes'
 BasedOnStyle: Mozilla
 BreakBeforeBraces: Stroustrup
-ColumnLimit: '100'
+ColumnLimit: '80'
 IndentWidth: '4'
 InsertBraces: 'true'
 PointerAlignment: 'Left'
