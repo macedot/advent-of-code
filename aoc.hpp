@@ -19,7 +19,8 @@
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
 
-using VSTRING = std::vector<std::string>;
+using STRING  = std::string;
+using VSTRING = std::vector<STRING>;
 
 using VALUE  = int64_t;
 using PVALUE = std::pair<VALUE, VALUE>;
