@@ -20,7 +20,7 @@ PVALUE findStart(VSTRING const& M)
     throw std::runtime_error("Invalid input!");
 }
 
-VALUE walkMaze(VSTRING const& M, PVALUE start)
+VALUE walkMaze(VSTRING const& M, SPAIR& V, PVALUE start)
 {
     const auto& [j, i] = start;
 
@@ -53,7 +53,6 @@ VALUE walkMaze(VSTRING const& M, PVALUE start)
         }
     }
 
-    SPAIR V;
     V.insert(start);
 
     VALUE res = 0;
@@ -106,16 +105,52 @@ VALUE walkMaze(VSTRING const& M, PVALUE start)
     return res;
 }
 
+VALUE countEnclosed(VSTRING M, SPAIR const& V)
+{
+    
+    VALUE inside = 0;
+    auto  inOut  = [&](VALUE j, VALUE i) { 
+
+
+
+        return 'O'; 
+    };
+
+    for (size_t j = 0; j < M.size(); ++j) {
+        for (size_t i = 0; i < M[j].size(); ++i) {
+            if (!V.contains(P(j, i))) {
+                M[j][i] = inOut(j, i);
+            }
+        }
+    }
+
+    for (const auto& line : M) {
+        fmt::print("{}\n", line);
+    }
+
+    //TODO:
+    // para cada ponto '.'
+    // -> raio na horizontal
+    // -> raio na vertical
+    // -> contar entra-sai do maze
+    return 0;
+}
+
 int main(int argc, char* argv[])
 {
     if (argc < 2) {
         throw std::runtime_error("Missing input file from command line");
     }
 
-    const auto grid  = readFile(argv[1]);
+    const auto grid = readFile(argv[1]);
+
+    SPAIR      visited;
     const auto start = findStart(grid);
-    const auto ans1  = walkMaze(grid, start);
+    const auto ans1  = walkMaze(grid, visited, start);
     fmt::print("{}\n", ans1);
+
+    const auto ans2 = countEnclosed(grid, visited);
+    fmt::print("{}\n", ans2);
 
     return 0;
 }
