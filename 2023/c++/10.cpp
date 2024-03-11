@@ -1,5 +1,8 @@
 #include "aoc.hpp"
 
+constexpr auto IN  = 'I';
+constexpr auto OUT = 'O';
+
 struct ELEM {
     PVALUE pos;
     VALUE  value;
@@ -105,21 +108,57 @@ VALUE walkMaze(VSTRING const& M, SPAIR& V, PVALUE start)
     return res;
 }
 
-VALUE countEnclosed(VSTRING M, SPAIR const& V)
+VALUE countEnclosed(VSTRING M, SPAIR const& V, PVALUE start)
 {
-    
-    VALUE inside = 0;
-    auto  inOut  = [&](VALUE j, VALUE i) { 
+    const auto& [sj, si] = start;
 
-
-
-        return 'O'; 
-    };
+    M[sj][si] = 'L'; // TODO: hack :(
 
     for (size_t j = 0; j < M.size(); ++j) {
         for (size_t i = 0; i < M[j].size(); ++i) {
             if (!V.contains(P(j, i))) {
-                M[j][i] = inOut(j, i);
+                M[j][i] = (j == 0 || i == 0 || j == M.size() - 1 ||
+                           i == M[j].size() - 1)
+                            ? OUT
+                            : '.'; // clear invalid
+            }
+        }
+    }
+
+    auto propagate = [&](VALUE j, VALUE i) {
+        if (M[j][i] != '.') {
+            return M[j][i];
+        }
+        if (j > 0 && M[j - 1][i] == OUT) {
+            return OUT;
+        }
+        if (i > 0 && M[j][i - 1] == OUT) {
+            return OUT;
+        }
+        if (j < M.size() - 1 && M[j + 1][i] == OUT) {
+            return OUT;
+        }
+        if (i < M[j].size() - 1 && M[j][i + 1] == OUT) {
+            return OUT;
+        }
+        return M[j][i];
+    };
+
+    for (auto round = 0; round < 2; ++round) {
+        for (size_t j = 1; j < M.size() - 1; ++j) {
+            for (size_t i = 1; i < M[0].size() - 1; ++i) {
+                M[j][i] = propagate(j, i);
+            }
+            for (size_t i = M[0].size() - 2; i > 0; --i) {
+                M[j][i] = propagate(j, i);
+            }
+        }
+        for (size_t i = 1; i < M[0].size() - 1; ++i) {
+            for (size_t j = 1; j < M.size() - 1; ++j) {
+                M[j][i] = propagate(j, i);
+            }
+            for (size_t j = M.size() - 2; j > 0; --j) {
+                M[j][i] = propagate(j, i);
             }
         }
     }
@@ -128,12 +167,42 @@ VALUE countEnclosed(VSTRING M, SPAIR const& V)
         fmt::print("{}\n", line);
     }
 
-    //TODO:
-    // para cada ponto '.'
-    // -> raio na horizontal
-    // -> raio na vertical
-    // -> contar entra-sai do maze
-    return 0;
+    auto count_bound = [&](VALUE j, VALUE i) {
+        VALUE count = 0;
+        for (size_t x = 0; x < i; ++x) {
+            if (!V.contains(P(j, x))) {
+                continue;
+            }
+            if (M[j][x] == OUT) {
+                break;
+            }
+            count += (M[j][x] == '|' || M[j][x] == 'J' || M[j][x] == 'L');
+        }
+        return count;
+    };
+
+    VALUE inside = 0;
+    for (size_t j = 0; j < M.size(); ++j) {
+        for (size_t i = 0; i < M[j].size(); ++i) {
+            if (V.contains(P(j, i))) {
+                continue;
+            }
+            if (count_bound(j, i) % 2 != 0) {
+                M[j][i] = IN;
+                ++inside;
+            }
+            else {
+                M[j][i] = OUT;
+            }
+        }
+    }
+
+    fmt::print("\n");
+    for (const auto& line : M) {
+        fmt::print("{}\n", line);
+    }
+
+    return inside;
 }
 
 int main(int argc, char* argv[])
@@ -149,7 +218,7 @@ int main(int argc, char* argv[])
     const auto ans1  = walkMaze(grid, visited, start);
     fmt::print("{}\n", ans1);
 
-    const auto ans2 = countEnclosed(grid, visited);
+    const auto ans2 = countEnclosed(grid, visited, start);
     fmt::print("{}\n", ans2);
 
     return 0;
