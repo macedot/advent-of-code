@@ -1,7 +1,8 @@
 #include "aoc.hpp"
 
-constexpr auto IN  = 'I';
-constexpr auto OUT = 'O';
+constexpr auto IN    = 'I';
+constexpr auto OUT   = 'O';
+constexpr auto START = 'S';
 
 struct ELEM {
     PVALUE pos;
@@ -13,7 +14,7 @@ PVALUE findStart(VSTRING const& M)
 {
     PVALUE start;
     for (const auto& row : M) {
-        const auto pos = row.find_first_of('S');
+        const auto pos = row.find_first_of(START);
         if (pos != std::string::npos) {
             start.second = pos;
             return start;
@@ -112,7 +113,69 @@ VALUE countEnclosed(VSTRING M, SPAIR const& V, PVALUE start)
 {
     const auto& [sj, si] = start;
 
-    M[sj][si] = 'L'; // TODO: hack :(
+    //M[sj][si] = 'L'; // TODO: hack :(
+    M[sj][si] = [&]() -> char {
+        const auto N = sj > 0 ? M[sj - 1][si] : 0;
+        const auto S = sj < M.size() - 1 ? M[sj + 1][si] : 0;
+        const auto W = si > 0 ? M[sj][si - 1] : 0;
+        const auto E = si < M[sj].size() - 1 ? M[sj][si + 1] : 0;
+
+        switch (N) {
+            case '|':
+            case 'F':
+            case '7':
+                switch (S) {
+                    case '|':
+                    case 'J':
+                    case 'L':
+                        return '|';
+                }
+                switch (E) {
+                    case '-':
+                    case 'J':
+                    case '7':
+                        return 'L';
+                }
+                switch (W) {
+                    case '-':
+                    case 'F':
+                    case 'L':
+                        return 'J';
+                }
+        }
+
+        switch (S) {
+            case '|':
+            case 'J':
+            case 'L':
+                switch (E) {
+                    case '-':
+                    case 'J':
+                    case '7':
+                        return 'F';
+                }
+                switch (W) {
+                    case '-':
+                    case 'F':
+                    case 'L':
+                        return '7';
+                }
+        }
+
+        switch (W) {
+            case '-':
+            case 'F':
+            case 'L':
+                switch (E) {
+                    case '-':
+                    case 'J':
+                    case '7':
+                        return '-';
+                }
+        }
+
+        throw std::runtime_error("Unhandled case!");
+    }();
 
     for (size_t j = 0; j < M.size(); ++j) {
         for (size_t i = 0; i < M[j].size(); ++i) {
@@ -163,10 +226,6 @@ VALUE countEnclosed(VSTRING M, SPAIR const& V, PVALUE start)
         }
     }
 
-    for (const auto& line : M) {
-        fmt::print("{}\n", line);
-    }
-
     auto count_bound = [&](VALUE j, VALUE i) {
         VALUE count = 0;
         for (size_t x = 0; x < i; ++x) {
@@ -195,11 +254,6 @@ VALUE countEnclosed(VSTRING M, SPAIR const& V, PVALUE start)
                 M[j][i] = OUT;
             }
         }
-    }
-
-    fmt::print("\n");
-    for (const auto& line : M) {
-        fmt::print("{}\n", line);
     }
 
     return inside;
