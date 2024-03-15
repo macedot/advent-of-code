@@ -104,23 +104,12 @@ local function recurse(line, groups, size)
 end
 
 function solve(lines, mut)
-<<<<<<< HEAD
-    -- print("Solving...")
-=======
->>>>>>> b22e178 (2023: day 12 golang (partial), day 11 lua (copy bc im dumb))
     local lines = parseInput(lines, mut)
     local count = 0
     for i, line in ipairs(lines) do
         ret = recurse(line[1], line[2], 0)
-<<<<<<< HEAD
-        -- print(ret)
         count = count + ret
     end
-    -- print(count)
-=======
-        count = count + ret
-    end
->>>>>>> b22e178 (2023: day 12 golang (partial), day 11 lua (copy bc im dumb))
     return count
 end
 
